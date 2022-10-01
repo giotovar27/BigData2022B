@@ -56,9 +56,9 @@ def estandarizar_datos(columna,may_min):
                 print(dat2)
             else:
                 print("la Variable que ingreso es incorrecta")
+#estandarizar_datos(columna,may_min) 
 # M = MAYUSCULA  //  m = minuscula // 1M = 1ra mayuscula
-#estandarizar_datos(columna,may_min) # parametros: archivo, columna, y si es mayuscula o minuscula
-
+# parametros: archivo, columna, y si es mayuscula o minuscula
 
 
 def caracteres_especiales(data,columna):
