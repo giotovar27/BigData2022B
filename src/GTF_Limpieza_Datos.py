@@ -2,6 +2,12 @@
 """
 @author: Giovanni Tovar
 """
+from pkgutil import get_data
+
+from tabnanny import verbose
+import argparse as ap
+
+
 
 import numpy as np
 import pandas as pd
@@ -24,7 +30,23 @@ print(file_path)
 
 data = pd.read_csv(file_path, encoding="latin-1", sep=";")
 
-print("estructura inicial ",data.shape)
+def main():
+    
+    parser=ap.ArgumentParser()
+    parser.add_argument("--verbose",type=int, default=1, help="Para imprimir informacion en pantalla")
+
+    args=parser.parse_args()    
+    #print("estructura inicial ",data.shape)
+
+
+    # funcion cambio de tipo de dato
+    # cambiar tipo de dato al campo edad ya que no todos los archivo vienen en el mismo tipo
+def tipo_dato(data):
+    
+    data["EDAD"]=data["EDAD"].astype('object')
+    return(data)
+
+data=tipo_dato(data)
 
 
 # FUNCION Eliminar duplicados
@@ -35,60 +57,35 @@ def elimina_Duplicados(data):
 
 elimina_Duplicados(data)
 n_data=elimina_Duplicados(data)
+print("estructura inicial ",data.shape)
 print("estructura final luego de eliminar duplicados ",n_data.shape)
 
 
 # FUNCION Sobrescribir valores nulos
 def valores_nulos(data):
     
-    data=data.fillna('SIN DATO') # remplaza los valores nulos por la palabra sin_dato
+    data=data.fillna('Sin dato') # remplaza los valores nulos por la palabra sin_dato
     return data
 
 valores_nulos(n_data)
 n_data=valores_nulos(n_data)
 
 
-# Funcion Quitar espacios en blanco por columnas
-def espacios_blancos(data):
-    
-    data.iloc[:,9]=data.iloc[:,9].str.lstrip(' ')  
-    data.iloc[:,8]=data.iloc[:,8].str.lstrip(' ')
-    data.iloc[:,7]=data.iloc[:,7].str.lstrip(' ')
-    data.iloc[:,6]=data.iloc[:,6].str.lstrip(' ')
-    data.iloc[:,5]=data.iloc[:,5].str.lstrip(' ')
-    data.iloc[:,3]=data.iloc[:,3].str.lstrip(' ')
-    #n_data.iloc[:,[5,6,7,8,9]]=n_data.iloc[:,[5,6,7,8,9]].str.strip(' ')
-    return(data)
-    
-espacios_blancos(n_data)
-n_data=espacios_blancos(n_data)
-
-
 #Funcion remplazar
 def remplazo(data):
     #data=data.replace( r'''[¤]''','ñ', regex=True)
     
-    replace_values={ 'Usaqu\x82n' : 'Usaquen', 'San crist¢bal': 'San Cristobal',
-                    'Engativ\xa0':'Engativa', 'Los m\xa0rtires':'Los Martires',
-                    'Fontib¢n':'Fontibon' }
-
     data=data.replace( r'''[¤]''','ñ', regex=True)
-    data=data.replace( {"LOCALIDAD": replace_values} )
+    data=data.replace( r'''[¡]''','i', regex=True)
+    
     return(data)
 
 remplazo(n_data)
 n_data=remplazo(n_data)
 
-def remplazo1(data):
-    data=data.replace( r'''[¡]''','i', regex=True)
-    
-    return(data)
-
-remplazo1(n_data)
-n_data=remplazo1(n_data)
 
 
-# FUNCION estandarizar datos, primera letra Mayuscula
+# FUNCION estandarizar datos, mayusculas o minusculas
 def estandarizar_datos(data1):
     
     #data1["RED"]=data1["RED","PRIORIDAD"].str.upper()  # MAYUSCULA
@@ -98,10 +95,31 @@ def estandarizar_datos(data1):
     data1.iloc[:,7]=data1.iloc[:,7].str.capitalize()
     data1.iloc[:,6]=data1.iloc[:,6].str.capitalize()
     data1.iloc[:,5]=data1.iloc[:,5].str.capitalize()
+    data1.iloc[:,4]=data1.iloc[:,4].str.capitalize()
     data1.iloc[:,3]=data1.iloc[:,3].str.capitalize()
     return(data1)
     
 n_data=estandarizar_datos(n_data) 
 
-nueva_data=n_data
-print(nueva_data)
+
+def remplazo(data):
+    #data=data.replace( r'''[¤]''','ñ', regex=True)
+    
+    replace_values={ 'Usaqu\x82n' : 'Usaquen', 'Usaqun':'Usaquen','San crist¢bal': 'San Cristobal','Engativ\xa0':'Engativa', 'Los m\xa0rtires':'Los Martires',
+    'Fontib¢n':'Fontibon' }
+    replace_incidente= { 'Convulsi¢n' : 'Convulsion', 'Dolor tor\xa0cico': 'Dolor torácico',
+    'Patologia ginecobst\x82trica':'patologia gineco obstetrica', 'Intoxicaci¢n':'Intoxicacion',
+    'Electrocuci¢n / rescate':'Electrocucion / rescate' }                                                                   
+
+    data=data.replace( {"LOCALIDAD": replace_values} )
+    data=data.replace( {"TIPO_INCIDENTE": replace_incidente} )
+
+    return(data)
+
+remplazo(n_data)
+n_data=remplazo(n_data)
+
+print(n_data)
+
+if __name__ == '__main__':
+    main()
