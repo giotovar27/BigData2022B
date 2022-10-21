@@ -46,7 +46,7 @@ def tipo_dato(data):
     data["EDAD"]=data["EDAD"].astype('object')
     return(data)
 
-data=tipo_dato(data)
+#data=tipo_dato(data)
 
 
 # FUNCION Eliminar duplicados
