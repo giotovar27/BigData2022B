@@ -24,7 +24,7 @@ data_dir = "notebooks"
 path2 = os.path.join(root_dir,data_dir)
 os.listdir(path2)
 
-filename="llamadas123_julio_2022.csv"
+filename="llamadas123_mayo_2022.csv"
 file_path = os.path.join(root_dir,data_dir,filename)
 print(file_path)
 
